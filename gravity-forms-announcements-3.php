@@ -97,23 +97,23 @@ function set_announcement_expiration( $post_data, $form, $entry ) {
     $post_id = $entry['post_id']; // get post id
     $user_date = $entry['25']; // get user-specified expiration date
     $schedule_date = $post_data['post_date']; // get schedule date as string
-    $max_run = date('Y-n-d', strtotime($schedule_date. ' +3 days')); // add 3 days to schedule date as maximum run time
+    $max_run = date('Y-n-d', strtotime($schedule_date. ' +3 weekdays')); // add 3 weekdays to schedule date as maximum run time
     
     if ( $user_date ) { // if user enters expiration date
         
-        if ( $user_date <= $max_run ) { // if user-specified expiration date is 3 days or less from schedule date
+        if ( $user_date <= $max_run ) { // if user-specified expiration date is 3 weekdays or less from schedule date
         
             $expiration_date = date( 'Y-n-d', strtotime( $user_date ) ); // set user date as expiration date
         
-        } else { // if user date is greater than 3 days from schedule date
+        } else { // if user date is greater than 3 weekdays from schedule date
             
-            $expiration_date = $max_run; // set expiration date at 3 days from schedule date
+            $expiration_date = $max_run; // set expiration date at 3 weekdays from schedule date
         
         }
         
     } else { // if user does not enter expiration date
         
-        $expiration_date = $max_run; // set expiration date at 3 days from schedule date
+        $expiration_date = $max_run; // set expiration date at 3 weekdays from schedule date
     
     }
     
