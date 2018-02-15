@@ -61,7 +61,7 @@ add_filter( 'gform_post_data_30', 'gw_schedule_post_by_date_field', 10, 3 );
 function gw_schedule_post_by_date_field( $post_data, $form, $entry ) {
 
     $date = $entry['16']; // ID of your Date field
-    $time = '08:50 am';
+    $time = '08:00 am';
 
     ### don't touch the magic below this line ###
 
@@ -93,31 +93,15 @@ function gw_schedule_post_by_date_field( $post_data, $form, $entry ) {
 */
 
 add_action( 'gform_after_submission_30', 'set_announcement_expiration', 10, 2 );
-function set_announcement_expiration( $post_data, $form, $entry ) { 
-    $post_id = $entry['post_id']; // get post id
-    $user_date = $entry['25']; // get user-specified expiration date
-    $schedule_date = $post_data['post_date']; // get schedule date as string
-    $max_run = date('Y-n-d', strtotime($schedule_date. ' +3 days')); // add 3 days to schedule date as maximum run time
+function set_announcement_expiration( $entry, $form ) { 
+    $post_id = $entry["post_id"];
     
-    if ( $user_date ) { // if user enters expiration date
+    if ( $entry['25'] ) {
         
-        if ( $user_date <= $max_run ) { // if user-specified expiration date is 3 days or less from schedule date
+        $expiration_date = date( 'Y-n-d', strtotime( $entry['25'] ) );
         
-            $expiration_date = date( 'Y-n-d', strtotime( $user_date ) ); // set user date as expiration date
-        
-        } else { // if user date is greater than 3 days from schedule date
-            
-            $expiration_date = $max_run; // set expiration date at 3 days from schedule date
-        
-        }
-        
-    } else { // if user does not enter expiration date
-        
-        $expiration_date = $max_run; // set expiration date at 3 days from schedule date
-    
+        update_post_meta( $post_id, 'pw_spe_expiration', $expiration_date );
     }
-    
-    update_post_meta( $post_id, 'pw_spe_expiration', $expiration_date ); // update post meta with expiration date
 }
 
 /**
